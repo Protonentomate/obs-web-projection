@@ -28,7 +28,7 @@
 <div class="select" style="margin: 0 .5rem .5rem 0;">
   <select bind:value={currentProfile} title="Change Profile" on:change={setCurrentProfile}>
   {#each profiles as profile}
-    <option value={profile}>{profile}</option>
+    <option value={profile}>{profile}tttt</option>
   {/each}
   </select>
 </div>

@@ -2,6 +2,8 @@
   /* eslint-env browser */
   const OBS_WEBSOCKET_LATEST_VERSION = '5.0.1' // https://api.github.com/repos/Palakis/obs-websocket/releases/latest
 
+
+
   // Imports
   import { onMount } from 'svelte'
   import {
@@ -97,7 +99,6 @@
   let heartbeat = {}
   let heartbeatInterval
   let isFullScreen
-  let isStudioMode
   let isSceneOnTop
   let isVirtualCamActive
   let isIconMode = window.localStorage.getItem('isIconMode') || false
@@ -145,12 +146,7 @@
     }
   }
 
-  async function toggleStudioMode () {
-    await sendCommand('SetStudioModeEnabled', {
-      studioModeEnabled: !isStudioMode
-    })
-  }
-
+  
   async function toggleReplay () {
     const data = await sendCommand('ToggleReplayBuffer')
     console.debug('ToggleReplayBuffer', data.outputActive)
@@ -268,8 +264,6 @@
       heartbeat = { stats, streaming, recording }
       // console.log(heartbeat);
     }, 1000) // Heartbeat
-    isStudioMode =
-      (await sendCommand('GetStudioModeEnabled')).studioModeEnabled || false
     isVirtualCamActive =
       (await sendCommand('GetVirtualCamStatus')).outputActive || false
   })
@@ -289,10 +283,7 @@
     isVirtualCamActive = data && data.outputActive
   })
 
-  obs.on('StudioModeStateChanged', async (data) => {
-    console.log('StudioModeStateChanged', data.studioModeEnabled)
-    isStudioMode = data && data.studioModeEnabled
-  })
+  
 
   obs.on('ReplayBufferStateChanged', async (data) => {
     console.log('ReplayBufferStateChanged', data)
@@ -406,14 +397,6 @@
                 <span class="icon"><Icon path={mdiCamera} /></span>
               </button>
             {/if}
-            <button
-              class:is-light={!isStudioMode}
-              class="button is-link"
-              on:click={toggleStudioMode}
-              title="Toggle Studio Mode"
-            >
-              <span class="icon"><Icon path={mdiBorderVertical} /></span>
-            </button>
             <button
               class:is-light={!isSceneOnTop}
               class="button is-link"
@@ -593,6 +576,7 @@
   </div>
 </section>
 
+<!--
 <footer class="footer">
   <div class="content has-text-centered">
     <p>
@@ -605,3 +589,4 @@
     </p>
   </div>
 </footer>
+-->
