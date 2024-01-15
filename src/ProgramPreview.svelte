@@ -4,13 +4,17 @@
    
 
   export let imageFormat = 'jpg'
-  const apiURL =
+  const templatesapiURL =
     "http://localhost:4000/vorlagen";
+   const einzelbilderapiURL =
+    "http://localhost:4000/einzelbilder";
 
   let programScene = ''
   let previewScene = ''
 
   let templates = []
+  let einzelbilder = []
+  
 
   let preview_linkslinks = {}
   let preview_linksrechts = {}
@@ -20,6 +24,8 @@
   let screenshotInterval
   let transitions = []
   // let currentTransition = ''
+
+  let currentTab = "Vorlagen";
 
 
 
@@ -114,8 +120,11 @@
 
   async function getDataFromApi() {
     console.log("API CALL")
-    const api = await fetch(apiURL);
-    templates = await api.json();
+    const templatesapi = await fetch(templatesapiURL);
+    templates = await templatesapi.json();
+    const einzelbilderapi = await fetch(einzelbilderapiURL);
+    einzelbilder = await einzelbilderapi.json();
+    console.log(einzelbilder)
     console.log(templates)
     //console.log(recordsObject)
   }
@@ -129,6 +138,14 @@
   export function handleDragover(event) {
         console.log("onDragOver");
     }
+
+    function tabVorlagen(){
+      currentTab = "Vorlagen"
+    }
+    function tabEinzelbilder(){
+      currentTab = "Einzelbilder"
+    }
+
 
   function changeScreen(target) {
     console.log(target.currentTarget.getAttribute('data-url'))
@@ -145,7 +162,7 @@
 </script>
 
 
-
+<b>Live</b>
 <div class="columns is-centered is-vcentered has-text-centered">
   <div class="column" >
     LinksLinks
@@ -153,7 +170,7 @@
     on:dragover|preventDefault={handleDragover}  bind:this={preview_linkslinks}  style="border-style: dotted;border-color:red;" alt="Program"/>
   </div>
   <div class="column">
-    Links Rechts
+    LinksRechts
     <img bind:this={preview_linksrechts} style="border-style: dotted;border-color:red;" alt="Program"/>
   </div>
   <div class="column">
@@ -166,13 +183,23 @@
   </div>
 </div>
 
+<hr>
+
+<div class="tabs is-centered">
+  <ul>
+    <li class:is-active={currentTab === 'Vorlagen'}><a on:click={tabVorlagen}>Vorlagen</a></li>
+    <li class:is-active={currentTab === 'Einzelbilder'}><a on:click={tabEinzelbilder}>Einzelbilder</a></li>
+  </ul>
+</div>
 
 
+
+
+{#if currentTab === 'Vorlagen'}
 <div class="columns is-centered is-vcentered has-text-centered">
   <div class="column">
-   Templates:
     {#each templates as template}
-    {template.Name}
+    <b>{template.Name}</b>
     <br>
     <div class="columns is-centered is-vcentered has-text-centered">
       <div class="column">
@@ -196,11 +223,30 @@
         <button data-url={template.RechtsRechts.LocalURL} data-target="RechtsRechts" on:click={changeScreen}>Aktivieren</button>
       </div>
       <div class="column">
-        Set Aktivieren
         <button data-urlLinksLinks={template.LinksLinks.LocalURL} data-urlLinksRechts={template.LinksRechts.LocalURL} data-urlRechtsLinks={template.RechtsLinks.LocalURL} data-urlRechtsRechts={template.RechtsRechts.LocalURL}  on:click={changeAllScreens}>Set Aktivieren</button>
       </div>
     </div>
     {/each}
-
   </div>
 </div>
+
+{/if}
+
+{#if currentTab === 'Einzelbilder'}
+
+<div class="file is-boxed">
+  <label class="file-label">
+    <input class="file-input" type="file" name="resume">
+    <span class="file-cta">
+      <span class="file-label">
+        Dateiupload
+      </span>
+    </span>
+  </label>
+</div>
+
+{/if}
+
+
+
+

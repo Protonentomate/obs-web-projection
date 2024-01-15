@@ -2,6 +2,7 @@ const sharp = require('sharp');
 import fs from 'fs';
 import path from 'path';
 var VorlageOrdner = "/Users/ncsc_brian/Pictures/projektion/src/";
+var EinzelOrdner = "/Users/ncsc_brian/Pictures/projektion/src/";
 var PublicURL = "http://localhost:4000/public/";
 
 
@@ -83,6 +84,31 @@ const server = Bun.serve({
       res.headers.set('Content-Type', 'application/json');
       return res;
     }
+
+    //Get Templates
+    if (url.pathname === '/einzelbilder') {
+      var einzelbilder = [];
+      const einzelfiles = fs.readdirSync(EinzelOrdner, { withFileTypes: true });
+      for (const file of einzelfiles) {
+
+        if (!file.isDirectory() && file.name.endsWith(".jpg")) {
+          console.log(file)
+
+          var templeateObj={
+            "Filename":file.name,
+            "URL":PublicURL+file.name,
+            "LocalURL":EinzelOrdner+file.name
+          }
+          einzelbilder.push(templeateObj)
+        }
+      }
+      var res = new Response(JSON.stringify(einzelbilder));
+      res.headers.set('Access-Control-Allow-Origin', '*');
+      res.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+      res.headers.set('Content-Type', 'application/json');
+      return res;
+    }
+
 
 
 

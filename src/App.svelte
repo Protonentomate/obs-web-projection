@@ -33,10 +33,6 @@
   import './style.scss'
   import { obs, sendCommand } from './obs.js'
   import ProgramPreview from './ProgramPreview.svelte'
-  import SceneSwitcher from './SceneSwitcher.svelte'
-  import SourceSwitcher from './SourceSwitcher.svelte'
-  import ProfileSelect from './ProfileSelect.svelte'
-  import SceneCollectionSelect from './SceneCollectionSelect.svelte'
 
   onMount(async () => {
     if ('serviceWorker' in navigator) {
@@ -317,158 +313,7 @@
   <div id="navmenu" class="navbar-menu">
     <div class="navbar-end">
       <div class="navbar-item">
-        <div class="buttons">
-          <!-- svelte-ignore a11y-missing-attribute -->
-          {#if connected}
-            <button class="button is-info is-light" disabled>
-              {#if heartbeat && heartbeat.stats}
-                {Math.round(heartbeat.stats.activeFps)} fps, {Math.round(
-                  heartbeat.stats.cpuUsage
-                )}% CPU, {heartbeat.stats.renderSkippedFrames} skipped frames
-              {:else}Connected{/if}
-            </button>
-            {#if heartbeat && heartbeat.streaming && heartbeat.streaming.outputActive}
-              <button
-                class="button is-danger"
-                on:click={stopStream}
-                title="Stop Stream"
-              >
-                <span class="icon"><Icon path={mdiAccessPointOff} /></span>
-                <span>{formatTime(heartbeat.streaming.outputDuration)}</span>
-              </button>
-            {:else}
-              <button
-                class="button is-danger is-light"
-                on:click={startStream}
-                title="Start Stream"
-              >
-                <span class="icon"><Icon path={mdiAccessPoint} /></span>
-              </button>
-            {/if}
-            {#if heartbeat && heartbeat.recording && heartbeat.recording.outputActive}
-              {#if heartbeat.recording.outputPaused}
-                <button
-                  class="button is-danger"
-                  on:click={resumeRecording}
-                  title="Resume Recording"
-                >
-                  <span class="icon"><Icon path={mdiPlayPause} /></span>
-                </button>
-              {:else}
-                <button
-                  class="button is-success"
-                  on:click={pauseRecording}
-                  title="Pause Recording"
-                >
-                  <span class="icon"><Icon path={mdiPause} /></span>
-                </button>
-              {/if}
-              <button
-                class="button is-danger"
-                on:click={stopRecording}
-                title="Stop Recording"
-              >
-                <span class="icon"><Icon path={mdiStop} /></span>
-                <span>{formatTime(heartbeat.recording.outputDuration)}</span>
-              </button>
-            {:else}
-              <button
-                class="button is-danger is-light"
-                on:click={startRecording}
-                title="Start Recording"
-              >
-                <span class="icon"><Icon path={mdiRecord} /></span>
-              </button>
-            {/if}
-            {#if isVirtualCamActive}
-              <button
-                class="button is-danger"
-                on:click={stopVirtualCam}
-                title="Stop Virtual Webcam"
-              >
-                <span class="icon"><Icon path={mdiCameraOff} /></span>
-              </button>
-            {:else}
-              <button
-                class="button is-danger is-light"
-                on:click={startVirtualCam}
-                title="Start Virtual Webcam"
-              >
-                <span class="icon"><Icon path={mdiCamera} /></span>
-              </button>
-            {/if}
-            <button
-              class:is-light={!isSceneOnTop}
-              class="button is-link"
-              on:click={switchSceneView}
-              title="Show Scene on Top"
-            >
-              <span class="icon"><Icon path={mdiArrowSplitHorizontal} /></span>
-            </button>
-            <button
-              class:is-light={!editable}
-              class="button is-link"
-              title="Edit Scenes"
-              on:click={() => (editable = !editable)}
-            >
-              <span class="icon">
-                <Icon path={editable ? mdiImageEditOutline : mdiImageEdit} />
-              </span>
-            </button>
-            <button
-              class:is-light={!isIconMode}
-              class="button is-link"
-              title="Show Scenes as Icons"
-              on:click={() => (isIconMode = !isIconMode)}
-            >
-              <span class="icon">
-                <Icon
-                  path={isIconMode
-                    ? mdiSquareRoundedBadgeOutline
-                    : mdiSquareRoundedBadge}
-                />
-              </span>
-            </button>
-            <button
-              class:is-light={!isReplaying}
-              class:is-danger={replayError}
-              class="button is-link"
-              title="Toggle Replay Buffer"
-              on:click={toggleReplay}
-            >
-              <span class="icon">
-                <Icon
-                  path={isReplaying ? mdiMotionPlayOutline : mdiMotionPlay}
-                />
-              </span>
-              {#if replayError}<span>{replayError}</span>{/if}
-            </button>
-            <ProfileSelect />
-            <SceneCollectionSelect />
-            <button
-              class="button is-danger is-light"
-              on:click={disconnect}
-              title="Disconnect"
-            >
-              <span class="icon"><Icon path={mdiConnection} /></span>
-            </button>
-          {:else}
-            <button class="button is-danger" disabled
-              >{errorMessage || 'Disconnected'}</button
-            >
-          {/if}
-          <!-- svelte-ignore a11y-missing-attribute -->
-          <button
-            class:is-light={!isFullScreen}
-            class="button is-link"
-            on:click={toggleFullScreen}
-            title="Toggle Fullscreen"
-          >
-            <span class="icon">
-              <Icon path={isFullScreen ? mdiFullscreenExit : mdiFullscreen} />
-            </span>
-          </button>
-        </div>
+        test
       </div>
     </div>
   </div>
@@ -480,11 +325,7 @@
       {#if isSceneOnTop}
         <ProgramPreview {imageFormat} />
       {/if}
-      <SceneSwitcher
-        bind:scenes
-        buttonStyle={isIconMode ? 'icon' : 'text'}
-        {editable}
-      />
+      
       {#if !isSceneOnTop}
         <ProgramPreview {imageFormat} />
       {/if}
